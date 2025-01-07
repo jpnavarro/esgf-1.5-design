@@ -4,8 +4,7 @@ This document outlines the requirements and acceptance criteria for the ESGF2-US
 
 ## Changes from ESGF-1.0
 
-- **Discovery** - Replace Apache Solr search indices with Globus Search indices.
-- **Discovery** - (Eventually) Consolidate the separate indices at Lawrence Livermore, Argonne, and Oak Ridge national laboratories into a single US-DOE index.
+- **Discovery** - Replace Apache Solr search indices with a single Globus Search index
 - **Data Access** - Replace legacy HTTP/S servers (for data access) with Globus Connect Server (providing both HTTP/S and bulk data transfer)
 - **Data Access** - Update wget script service to use Globus HTTP/S and begin a deprecation process
 - **Applications** - Replace COG web application with MetaGrid
@@ -13,43 +12,43 @@ This document outlines the requirements and acceptance criteria for the ESGF2-US
 
 ## Globus Search indices
 
-**Phase I:** Initially, each US-DOE laboratory (LLNL, ANL, ORNL) will replace its Solr ESGF index with a distinct Globus Search ESGF index.
-
-**Phase II:** As a separate follow-on activity, the three laboratories will consolidate the three indices into a single US-DOE index that references data wherever it is available.
+Replace Apache Solr search indices at Lawrence Livermore, Argonne, and Oak Ridge National Laboratories with a single consolidated US-DOE Globus Search index referencing all available data replicas.
 
 ### Index contents
 
-In Phase I, each index MUST contain metadata for data stored at the corresponding site (ANL, LLNL, ORNL).
+Each dataset will have a single entry in the consolidated index, and the entry will refer to ALL US-DOE locations where the data may be accessed.
 
-In Phase II, the consolidated index MUST contain metadata for data stored at ANY US-DOE site (ANL, LLNL, ORNL).
+- **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? Answer: YES?
 
-In Phase II, each dataset will have a single entry in the consolidated index, and the entry will refer to ALL US-DOE locations where the data may be accessed.
-
-- **Q:** Will either the Phase I or Phase II indices need to refer to any data access options beyond the three US-DOE sites?
-
-- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented in each of the two phases mentioned above?  Is it possible that we might prefer to operate an additional (separate) index for this data in Phase I or Phase II?
+- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented? Answer: as additional replicas
 
 - **Q:** Argonne's E3SM modeling team plans to publish new datasets between now and the time ESGF-NG is available. These datasets will be stored at Argonne. Will LLNL or ORNL replicate these datasets? How will the publication be managed?
 
 - **Q:** It is expected that there will be "CMIP6 Plus" datasets published between now and the time ESGF-NG is available. Where will these datasets be stored? Will they be replicated at any other physical sites, and if so, how will that publication and replication be managed?
 
+- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? Answer: mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required.
+
+- **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Solr indexes? Answer: tentative plan to do so.
+
 ### ESGF metadata schema
 
-The ESGF dataset metadata schema is based on WCRP specifications and will not change in either Phase I or Phase II.
+The ESGF dataset metadata schema is based on WCRP specifications and will not change ESGF-1.5.
 
-It is expected that the metadata schema will change in Phase II to allow the expression of multiple data nodes (physical storage locations) for a given dataset entry.
+The metadata schema will change to allow the expression of multiple data nodes (physical storage locations) for a given dataset entry.
 
-- **Q:** Have we settled on the specific changes mentioned above yet?
+The metadata schema will add these fields to improve the repressentation of files available from Globus:
 
-- **Q:** What process(es) will we follow to announce the Phase II changes to the ESGF community?
+- New file attributes: collection (string), path (string), type (string), access scheme (globus) = "globus", mime type 
+
+- **Q:** What process(es) will we follow to announce the metadata changes to the ESGF community?
 
 ### File-level entries
 
-In Phase I, file-level entries will be included in the Globus Search indices.
+File-level entries will be included in the Globus Search index to represent replica locations.
 
-- **Q:** Could we remove file-level entries in Phase I and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data.
+- **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data.
 
-In Phase II, the consolidated index will NOT include file-level entries in the Globus Search index. Clients will not need to inspect additional index entries to learn about individual files in a dataset. Instead, each dataset entry will contain a new file manifest field: a file list including pathnames and checksums for each file in the dataset. Clients can use that manifest to request individual files via HTTP/S. (Clients that prefer bulk transfer can use the base path in the dataset as the source path for transfer requests.)
+(NEEDS REVIEW) The consolidated index will NOT include file-level entries in the Globus Search index. Clients will not need to inspect additional index entries to learn about individual files in a dataset. Instead, each dataset entry will contain a new file manifest field: a file list including pathnames and checksums for each file in the dataset. Clients can use that manifest to request individual files via HTTP/S. (Clients that prefer bulk transfer can use the base path in the dataset as the source path for transfer requests.)
 
 - **Q:** What is the maximum number of files in any existing ESGF (CMIP6 or earlier) dataset? (We need to confirm that no manifest is too large to include in a dataset entry.)
 
@@ -67,9 +66,7 @@ The transition API MUST be feature complete with respect to known uses of ESGF S
 
 - **Q:** Will the transition API mimic file-level entries when they're removed from the Globus Search indices?
 
-- **Q:** In Phase I, will each lab need to deploy and operate a distinct transition API, or will one lab provide the transition API for all three labs?
-
-- **Q:** In Phase II, who will be responsible for deploying and operating the transition API for the consolidated index?
+- **Q:** Who will be responsible for deploying and operating the transition API for the consolidated index?
 
 - **Q:** How long must the transition API be available?
 
