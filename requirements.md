@@ -18,17 +18,17 @@ Replace Apache Solr search indices at Lawrence Livermore, Argonne, and Oak Ridge
 
 Each dataset will have a single entry in the consolidated index, which will refer to ALL US-DOE locations where the data may be accessed.
 
-- **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? Answer: YES, at NERSC and potentially other locations.
+- **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? **A:** YES, at NERSC and potentially other locations.
 
-- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented? Answer: as additional file replicas
+- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented? **A:** as additional file replicas
 
 - **Q:** Argonne's E3SM modeling team plans to publish new datasets between now and the time ESGF-NG is available. These datasets will be stored at Argonne. Will LLNL or ORNL replicate these datasets? How will the publication be managed?
 
 - **Q:** It is expected that there will be "CMIP6 Plus" datasets published between now and the time ESGF-NG is available. Where will these datasets be stored? Will they be replicated at any other physical sites, and if so, how will that publication and replication be managed?
 
-- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? Answer: mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required publishers.
+- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? **A:** mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required publishers.
 
-- **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Globus Search indexes? Answer: YES, tentatively.
+- **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Globus Search indexes? **A:** YES, tentatively.
 
 ### ESGF metadata schema
 
@@ -46,7 +46,7 @@ The metadata schema will add these fields to improve the representation of files
 
 File-level entries will be included in the Globus Search index to represent replica locations.
 
-- **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data. Answer: NO, as this change is not necessary and results in more transition effort.
+- **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data. **A:** NO, as this change is not necessary and results in more transition effort.
 
 - **Q:** What is the maximum number of files in any existing ESGF (CMIP6 or earlier) dataset? (We need to confirm that no manifest is too large to include in a dataset entry.)
 
