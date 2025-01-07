@@ -97,12 +97,12 @@ Metagrid MUST be updated to allow use of a Globus Search index instead of a Solr
 
 ## Intake-ESGF
 
-Intake-esgf MUST be updated to allow use of a Globus Search index instead of a Solr index. The transition API for search clients described above is a key step in making this happen.
+Intake-esgf has been written to be agnostic about how it gets information about what datasets and files are available for download. It can use both the Solr index / REST API or Globus Search (via the python sdk) directly to populate intermediate data structures that are used to setup file transfers. If 1.5 were ready today, we would only need to update the index UUID in the configuration, and change a little code to parse out the correct globus information.
 
-- **Q:** Will intake-esgf be updated to use Globus Search natively, or will it use the transitional API mentioned above?
+- **Q:** Will intake-esgf be updated to use Globus Search natively, or will it use the transitional API mentioned above? **A:** We have used Globus Search natively from inception. We do not require the intermediate API at all and do not plan to use it.
 
-- **Q:** Are there any more changes to intake-esgf needed to allow use of a Globus Search index?
+- **Q:** Are there any more changes to intake-esgf needed to allow use of a Globus Search index? **A:** No, we already use it.
 
-- **Q:** Are there changes to intake-esgf needed to implement the wget service changes mentioned above?
+- **Q:** Are there changes to intake-esgf needed to implement the wget service changes mentioned above? **A:** Intake-esgf is a programmatic interface into the ESGF holdings. We find it counter-intuitive to write a python script that generates a wget script that downloads your data. The python script simply downloads your data. In fact, we think this is a good alternative to wget scripts in the future.
 
-- **Q:** Would it be useful for intake-esgf to support bulk transfers with Globus rather than only HTTP/S access? If so, does it already have this support or is there work needed to make this possible?
+- **Q:** Would it be useful for intake-esgf to support bulk transfers with Globus rather than only HTTP/S access? If so, does it already have this support or is there work needed to make this possible? **A:** `intake-esgf` already does this, see this [documentation](https://intake-esgf.readthedocs.io/en/latest/globus.html).
