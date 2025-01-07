@@ -1,6 +1,6 @@
 # ESGF-1.5 Requirements and Acceptance Criteria
 
-This document outlines the requirements and acceptance criteria for the ESGF2-US's ESGF-1.5 deployment. ESGF-1.5 is a new version of the US-Dept. of Energy's (US-DOE) ESGF catalog and data archive for CMIP6 and prior ESGF data. (CMIP7 and beyond will instead use the ESGF-NG system.) ESGF-1.5 will allow US-DOE to continue providing access to legacy ESGF data by migrating to new, more easily-maintainable systems.
+This document outlines the requirements and acceptance criteria for the ESGF2-US ESGF-1.5 deployment. ESGF-1.5 is a new version of the US-Dept. of Energy's (US-DOE) ESGF catalog and data archive for CMIP6 and prior ESGF data. (CMIP7 and beyond will instead use the ESGF-NG system.) ESGF-1.5 will allow US-DOE to continue providing access to legacy ESGF data by migrating to new, more easily-maintainable systems. Given that the ESGF-1.5 deployment targets legacy ESGF data, we will minimize the effort and cost to migrate from ESGF-1.0 by making the minimum necessary changes to maintain legacy data access. Ideas for improvements should target ESGF-NG.
 
 ## Changes from ESGF-1.0
 
@@ -10,35 +10,35 @@ This document outlines the requirements and acceptance criteria for the ESGF2-US
 - **Applications** - Replace COG web application with MetaGrid
 - **Applications** - Add intake-esgf command-line interface
 
-## Globus Search indices
+## Globus Search Index
 
 Replace Apache Solr search indices at Lawrence Livermore, Argonne, and Oak Ridge National Laboratories with a single consolidated US-DOE Globus Search index referencing all available data replicas.
 
 ### Index contents
 
-Each dataset will have a single entry in the consolidated index, and the entry will refer to ALL US-DOE locations where the data may be accessed.
+Each dataset will have a single entry in the consolidated index, which will refer to ALL US-DOE locations where the data may be accessed.
 
-- **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? Answer: YES?
+- **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? Answer: YES, at NERSC and potentially other locations.
 
-- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented? Answer: as additional replicas
+- **Q:** LLNL's Solr index currently includes datasets that are not stored at LLNL. These datasets are stored at other data nodes that do not have their own indices. How will these datasets be represented? Answer: as additional file replicas
 
 - **Q:** Argonne's E3SM modeling team plans to publish new datasets between now and the time ESGF-NG is available. These datasets will be stored at Argonne. Will LLNL or ORNL replicate these datasets? How will the publication be managed?
 
 - **Q:** It is expected that there will be "CMIP6 Plus" datasets published between now and the time ESGF-NG is available. Where will these datasets be stored? Will they be replicated at any other physical sites, and if so, how will that publication and replication be managed?
 
-- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? Answer: mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required.
+- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? Answer: mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required publishers.
 
-- **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Solr indexes? Answer: tentative plan to do so.
+- **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Globus Search indexes? Answer: YES, tentatively.
 
 ### ESGF metadata schema
 
 The ESGF dataset metadata schema is based on WCRP specifications and will not change ESGF-1.5.
 
-The metadata schema will change to allow the expression of multiple data nodes (physical storage locations) for a given dataset entry.
+The metadata schema will change to allow the expression of multiple replicas (physical storage locations) for a given dataset entry.
 
-The metadata schema will add these fields to improve the repressentation of files available from Globus:
+The metadata schema will add these fields to improve the representation of files available from Globus:
 
-- New file attributes: collection (string), path (string), type (string), access scheme (globus) = "globus", mime type 
+- New file attributes: collection (string), path (string), type (string), access scheme (string) = "globus", mime type 
 
 - **Q:** What process(es) will we follow to announce the metadata changes to the ESGF community?
 
@@ -46,9 +46,7 @@ The metadata schema will add these fields to improve the repressentation of file
 
 File-level entries will be included in the Globus Search index to represent replica locations.
 
-- **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data.
-
-(NEEDS REVIEW) The consolidated index will NOT include file-level entries in the Globus Search index. Clients will not need to inspect additional index entries to learn about individual files in a dataset. Instead, each dataset entry will contain a new file manifest field: a file list including pathnames and checksums for each file in the dataset. Clients can use that manifest to request individual files via HTTP/S. (Clients that prefer bulk transfer can use the base path in the dataset as the source path for transfer requests.)
+- **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data. Answer: NO, as this change is not necessary and results in more transition effort.
 
 - **Q:** What is the maximum number of files in any existing ESGF (CMIP6 or earlier) dataset? (We need to confirm that no manifest is too large to include in a dataset entry.)
 
