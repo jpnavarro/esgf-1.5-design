@@ -32,13 +32,15 @@ Each dataset will have a single entry in the consolidated index, which will refe
 
 ### ESGF metadata schema
 
-The ESGF dataset metadata schema is based on WCRP specifications and will not change ESGF-1.5.
+The ESGF **type=Dataset** metadata schema is based on WCRP specifications and will not change in ESGF-1.5.
 
-The metadata schema will change to allow the expression of multiple replicas (physical storage locations) for a given dataset entry.
+The ESGF **Type=File** metadata schema will change to allow the expression of multiple Globus files in a given dataset, as follows:
 
-The metadata schema will add these fields to improve the representation of files available from Globus:
-
-- New file attributes: collection (string), path (string), type (string), access scheme (string) = "globus", mime type 
+- New url value "globus_file_attributes:" (informs a client to use the following new attributes)
+- New attribute: mime_type
+- New globus file attributes: collection (string), path (string), globus_type (string)
+- Change index_node attribute value to "esgf2-us-globus-search" (or an index_id?)
+- Unchanged file related atributes: data_node, title (contains filename), format, checksum, checksum_type, size, and others
 
 - **Q:** What process(es) will we follow to announce the metadata changes to the ESGF community?
 
@@ -54,7 +56,7 @@ File checksums in manifests will use the same algorithm(s) that was/were previou
 
 ## Transition API for search clients
 
-To simplify the transition from Solr to Metagrid, we will design, develop, and deploy a transition API that mimics the Apache Solr search API using the new Globus Search ESGF indices to fulfill requests.
+To simplify the transition from Solr to Metagrid, we will design, develop, and deploy a transition API that mimics the Apache Solr search API using the new Globus Search ESGF indix to fulfill requests.
 
 The transition API MUST be feature complete with respect to known uses of ESGF Solr indices.
 
