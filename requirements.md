@@ -16,7 +16,7 @@ Replace Apache Solr search indices at Lawrence Livermore, Argonne, and Oak Ridge
 
 ### Index contents
 
-Each dataset will have a single entry in the consolidated index, which will refer to ALL US-DOE locations where the data may be accessed.
+Each dataset will have a single entry in the consolidated index, and file entries for ALL US-DOE locations where the data may be accessed.
 
 - **Q:** Will the consolidated index need to refer to any data access options beyond the three US-DOE sites? **A:** YES, at NERSC and potentially other locations.
 
@@ -26,7 +26,7 @@ Each dataset will have a single entry in the consolidated index, which will refe
 
 - **Q:** It is expected that there will be "CMIP6 Plus" datasets published between now and the time ESGF-NG is available. Where will these datasets be stored? Will they be replicated at any other physical sites, and if so, how will that publication and replication be managed?
 
-- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? **A:** mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required publishers.
+- **Q:** Are there concerns over the destructive potential of (~12) publishers affecting entries they do not own sufficient to warrent a mitigation approach? **A:** mitigated by having a single team consolidate Solr index metadata, and limited future publishing to the minimum required publishers. Is this adequate?
 
 - **Q** Can we streamline the transition by having a single person/team consolidating all the metadata in the Globus Search indexes? **A:** YES, tentatively.
 
@@ -36,11 +36,7 @@ The ESGF **type=Dataset** metadata schema is based on WCRP specifications and wi
 
 The ESGF **Type=File** metadata schema will change to allow the expression of multiple Globus files in a given dataset, as follows:
 
-- New url value "globus_file_attributes:" (informs a client to use the following new attributes)
-- New attribute: mime_type
-- New globus file attributes: collection (string), path (string), globus_type (string)
-- Change index_node attribute value to "esgf2-us-globus-search" (or an index_id?)
-- Unchanged file related atributes: data_node, title (contains filename), format, checksum, checksum_type, size, and others
+- Change the index_node attribute value to "us-index".
 
 - **Q:** What process(es) will we follow to announce the metadata changes to the ESGF community?
 
@@ -50,13 +46,13 @@ File-level entries will be included in the Globus Search index to represent repl
 
 - **Q:** Could we remove file-level entries and replace them with a file manifest (file list including pathnames and checksums for each file in the dataset) in the dataset entry? This would have operational benefits and also simplify clients by reducing the number of entries they must explore to retrieve data. **A:** NO, as this change is not necessary and results in more transition effort.
 
-- **Q:** What is the maximum number of files in any existing ESGF (CMIP6 or earlier) dataset? (We need to confirm that no manifest is too large to include in a dataset entry.)
+- **Q:** What is the maximum number of files in any existing ESGF (CMIP6 or earlier) dataset? (We need to confirm that no manifest is too large to include in a dataset entry.) **A:** Not an issue, because File entries a reparate from the Dataset entries and not embedded.
 
 File checksums in manifests will use the same algorithm(s) that was/were previously used in file entries and, in fact, will not be recomputed.
 
 ## Transition API for search clients
 
-To simplify the transition from Solr to Metagrid, we will design, develop, and deploy a transition API that mimics the Apache Solr search API using the new Globus Search ESGF indix to fulfill requests.
+To simplify the transition from Solr to Metagrid, we will design, develop, and deploy a transition API that mimics the Apache Solr search API using the new Globus Search ESGF index to fulfill requests.
 
 The transition API MUST be feature complete with respect to known uses of ESGF Solr indices.
 
@@ -64,7 +60,7 @@ The transition API MUST be feature complete with respect to known uses of ESGF S
 
 - **Q:** Who will complete any remaining design/development/testing of the transition API?
 
-- **Q:** Will the transition API mimic file-level entries when they're removed from the Globus Search indices?
+- **Q:** Will the transition API mimic file-level entries when they're removed from the Globus Search index?
 
 - **Q:** Who will be responsible for deploying and operating the transition API for the consolidated index?
 
